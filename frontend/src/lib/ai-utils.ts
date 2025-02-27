@@ -1,21 +1,20 @@
+import { processAICommand } from './api-client';
+
 export async function parseAICommand(prompt: string): Promise<AICommand> {
-  // For now, we'll use a simple parsing logic
-  // Later, we can use AI to parse natural language
-  const defaultCommand: AICommand = {
-    type: 'fill',
-    target: ['A1'],
+  const response = await processAICommand(prompt);
+  
+  // Expect OpenAI to return a structured response like:
+  // { type: 'fill', cells: { 'A1': 'Monthly Budget', 'A2': 'Income', ... } }
+  return {
+    type: response.type || 'fill',
+    target: Object.keys(response.cells || {}),
     content: prompt
   };
-
-  return defaultCommand;
 }
 
 export async function processAIResponse(command: AICommand): Promise<AIResponse> {
-  // TODO: Replace with actual OpenAI API call
-  // For now, just echo the command
+  // The AI has already provided the cell values in the response
   return {
-    cells: {
-      [command.target[0]]: `AI Response to: ${command.content}`
-    }
+    cells: command.cells || { [command.target[0]]: command.content }
   };
 } 
