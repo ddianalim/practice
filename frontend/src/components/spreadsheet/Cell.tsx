@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useSpreadsheetStore } from '@/lib/store/spreadsheet-store';
 
 interface CellProps {
@@ -41,11 +41,19 @@ export function Cell({ id, isHeader = false }: CellProps) {
     }
   };
 
+  // Add useEffect to handle formula evaluation
+  useEffect(() => {
+    if (cell.formula?.startsWith('=AI(')) {
+      const prompt = cell.formula.slice(4, -1).replace(/['"]/g, '');
+      useSpreadsheetStore.getState().processAICommand(prompt);
+    }
+  }, [cell.formula]);
+
   return (
     <div
       className={`relative w-full h-full min-h-[40px] border-b border-r border-gray-300 ${
         selectedCell === id ? "bg-blue-50" : ""
-      }`}
+      } ${cell.isComputing ? "bg-gray-50" : ""}`}
       onClick={() => !isHeader && setSelectedCell(id)}
       onDoubleClick={handleDoubleClick}
     >
@@ -65,6 +73,11 @@ export function Cell({ id, isHeader = false }: CellProps) {
         />
       ) : (
         <div className="p-2 text-black">{cell.value}</div>
+      )}
+      {cell.isComputing && (
+        <div className="absolute inset-0 flex items-center justify-center bg-gray-50/50">
+          Processing...
+        </div>
       )}
     </div>
   );

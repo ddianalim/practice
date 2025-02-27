@@ -43,5 +43,27 @@ export const useSpreadsheetStore = create<SpreadsheetState>((set, get) => ({
     } finally {
       set({ isProcessing: false });
     }
+  },
+
+  saveSpreadsheet: async () => {
+    try {
+      const cells = get().cells;
+      const response = await fetch(`${API_BASE_URL}/spreadsheet/save`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ cells }),
+      });
+      
+      if (!response.ok) {
+        throw new Error('Failed to save spreadsheet');
+      }
+      
+      return await response.json();
+    } catch (error) {
+      console.error('Save error:', error);
+      throw error;
+    }
   }
 })); 

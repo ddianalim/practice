@@ -43,6 +43,19 @@ export function ChatInterface() {
           >
             {isProcessing ? "Processing..." : "Send"}
           </button>
+          <button
+            onClick={async () => {
+              try {
+                await useSpreadsheetStore.getState().saveSpreadsheet();
+                alert('Spreadsheet saved successfully!');
+              } catch (error) {
+                alert('Failed to save spreadsheet');
+              }
+            }}
+            className="px-6 py-3 bg-green-500 text-white font-medium rounded-lg hover:bg-green-600"
+          >
+            Save to MongoDB
+          </button>
         </form>
       </div>
     </div>

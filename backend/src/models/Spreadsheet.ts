@@ -1,17 +1,25 @@
 import mongoose from 'mongoose';
 
+const CellSchema = new mongoose.Schema({
+  value: String,
+  formula: String,
+  isComputing: Boolean,
+  error: String
+});
+
 const SpreadsheetSchema = new mongoose.Schema({
-  name: String,
   cells: {
     type: Map,
-    of: {
-      value: String,
-      formula: String,
-      isComputing: Boolean,
-      error: String,
-    }
+    of: CellSchema
   },
-  lastModified: { type: Date, default: Date.now },
+  createdAt: {
+    type: Date,
+    default: Date.now
+  },
+  updatedAt: {
+    type: Date,
+    default: Date.now
+  }
 });
 
 export const Spreadsheet = mongoose.model('Spreadsheet', SpreadsheetSchema); 
