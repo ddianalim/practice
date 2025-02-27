@@ -5,6 +5,8 @@ import { ChatInterface } from "@/components/spreadsheet/ChatInterface";
 import { SavedSpreadsheets } from "@/components/spreadsheet/SavedSpreadsheets";
 import { Navbar } from "@/components/spreadsheet/Navbar";
 import { useState } from "react";
+import { Header } from "@/components/Header";
+
 
 export default function Home() {
   const [refreshKey, setRefreshKey] = useState(0);
@@ -16,7 +18,10 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-white">
       <div className="max-w-7xl mx-auto p-6">
-        <h1 className="text-3xl font-bold mb-6 text-gray-800">Full Stack Practice</h1>
+        {/* <h1 className="text-3xl font-bold mb-6 text-gray-800">
+          Full Stack Practice
+        </h1> */}
+        <Header />
         <SavedSpreadsheets key={refreshKey} />
         <ChatInterface />
         <div className="mb-6 flex flex-col">

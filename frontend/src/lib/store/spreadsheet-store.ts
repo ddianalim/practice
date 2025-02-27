@@ -10,8 +10,15 @@ export const useSpreadsheetStore = create<SpreadsheetState>((set, get) => ({
   selectedCell: null,
   isProcessing: false,
   currentSpreadsheetId: null,
+  title: 'Untitled Spreadsheet',
 
-  clearCells: () => set({ cells: {}, currentSpreadsheetId: null }),
+  clearCells: () => set({ 
+    cells: {}, 
+    currentSpreadsheetId: null,
+    title: 'Untitled Spreadsheet'
+  }),
+
+  setTitle: (title: string) => set({ title }),
 
   setCell: (id: string, value: Partial<CellValue>) =>
     set((state) => ({

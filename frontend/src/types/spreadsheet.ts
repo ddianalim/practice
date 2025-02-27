@@ -16,7 +16,9 @@ export interface SpreadsheetState {
   selectedCell: string | null;
   isProcessing: boolean;
   currentSpreadsheetId: string | null;
+  title: string;
   clearCells: () => void;
+  setTitle: (title: string) => void;
   setCell: (id: string, value: Partial<CellValue>) => void;
   setSelectedCell: (id: string | null) => void;
   setCurrentSpreadsheetId: (id: string | null) => void;

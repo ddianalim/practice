@@ -7,7 +7,7 @@ import { ColumnHeader } from './ColumnHeader';
 
 export function Grid() {
   const columns = Array.from({ length: 26 }, (_, i) => String.fromCharCode(65 + i));
-  const rows = Array.from({ length: 100 }, (_, i) => i + 1);
+  const rows = Array.from({ length: 101 }, (_, i) => i + 1);
 
   const store = useSpreadsheetStore();
   console.log('Store state:', store);
