@@ -38,7 +38,13 @@ router.post('/process', async (req, res) => {
       response_format: { type: "json_object" }
     });
 
-    res.json(JSON.parse(completion.choices[0].message.content));
+    const content = completion.choices[0]?.message?.content;
+    
+    if (!content) {
+      throw new Error('No content received from OpenAI');
+    }
+
+    res.json(JSON.parse(content));
   } catch (error) {
     console.error('OpenAI API error:', error);
     res.status(500).json({ error: 'Failed to process AI command' });

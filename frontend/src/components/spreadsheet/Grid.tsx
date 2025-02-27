@@ -5,8 +5,8 @@ import { Cell } from "./Cell";
 import { useSpreadsheetStore } from "@/lib/store/spreadsheet-store";
 
 export function Grid() {
-  const ROWS = 26; // A-Z
-  const COLS = 10;
+  const COLS = 26; // A-Z
+  const ROWS = 100; // 1-100
 
   const getColumnLabel = (index: number) => String.fromCharCode(65 + index);
 

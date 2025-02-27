@@ -13,8 +13,9 @@ export async function parseAICommand(prompt: string): Promise<AICommand> {
 }
 
 export async function processAIResponse(command: AICommand): Promise<AIResponse> {
-  // The AI has already provided the cell values in the response
+  const response = await processAICommand(command.content);
   return {
-    cells: command.cells || { [command.target[0]]: command.content }
+    type: response.type,
+    cells: response.cells
   };
 } 
