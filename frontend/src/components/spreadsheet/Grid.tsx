@@ -29,7 +29,7 @@ export function Grid() {
         {Array.from({ length: COLS }).map((_, i) => (
           <div
             key={`header-${i}`}
-            className="bg-gray-200 p-2 border-b border-r border-gray-300 text-center font-medium"
+            className="bg-gray-200 p-2 border-b border-r border-gray-300 text-center font-medium text-black"
           >
             {getColumnLabel(i)}
           </div>
@@ -38,7 +38,7 @@ export function Grid() {
         {/* Grid cells */}
         {Array.from({ length: ROWS }).map((_, row) => (
           <React.Fragment key={row}>
-            <div className="bg-gray-200 p-2 border-b border-r border-gray-300 text-center font-medium">
+            <div className="bg-gray-200 p-2 border-b border-r border-gray-300 text-center font-medium text-black">
               {row + 1}
             </div>
             {Array.from({ length: COLS }).map((_, col) => (
