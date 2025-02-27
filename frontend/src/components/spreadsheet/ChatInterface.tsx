@@ -5,32 +5,37 @@ import { useSpreadsheetStore } from "@/lib/store/spreadsheet-store";
 
 export function ChatInterface() {
   const [prompt, setPrompt] = useState("");
+  const [error, setError] = useState<string | null>(null);
   const { processAICommand, isProcessing } = useSpreadsheetStore();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!prompt.trim()) return;
 
+    setError(null);
     try {
       await processAICommand(prompt);
       setPrompt("");
     } catch (error) {
-      console.error("Error:", error);
+      setError(error instanceof Error ? error.message : 'Failed to process command');
     }
   };
 
   return (
     <div className="mb-8 bg-white rounded-lg shadow-sm">
       <div className="p-4 border border-gray-200 rounded-lg">
-        <form onSubmit={handleSubmit} className="flex gap-3">
+        <form onSubmit={handleSubmit} className="flex flex-col gap-3">
           <input
             type="text"
             value={prompt}
             onChange={(e) => setPrompt(e.target.value)}
             placeholder="Enter instructions (e.g., 'Create a monthly budget template')"
-            className="flex-1 px-4 py-3 text-base text-gray-900 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            className="w-full px-4 py-3 text-base text-gray-900 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             disabled={isProcessing}
           />
+          {error && (
+            <div className="text-red-500 text-sm">{error}</div>
+          )}
           <button
             type="submit"
             disabled={isProcessing || !prompt}

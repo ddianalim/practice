@@ -11,24 +11,34 @@ const openai = new OpenAI({
 
 router.post('/process', async (req, res) => {
   try {
-    const { prompt, context } = req.body;
+    const { prompt } = req.body;
 
     const completion = await openai.chat.completions.create({
       model: "gpt-3.5-turbo",
       messages: [
         {
           role: "system",
-          content: "You are a spreadsheet assistant. Convert natural language into spreadsheet operations. Return only JSON responses."
+          content: `You are a spreadsheet AI assistant. Convert natural language into spreadsheet operations.
+          Always respond with JSON in this format:
+          {
+            "type": "fill",
+            "cells": {
+              "A1": "value",
+              "B1": "value"
+            }
+          }`
         },
         {
           role: "user",
-          content: prompt
+          content: `Given this request: "${prompt}"
+          Return a JSON response with cell values to create in the spreadsheet.
+          For example, if creating a budget, populate multiple cells with categories and headers.`
         }
       ],
       response_format: { type: "json_object" }
     });
 
-    res.json(completion.choices[0].message);
+    res.json(JSON.parse(completion.choices[0].message.content));
   } catch (error) {
     console.error('OpenAI API error:', error);
     res.status(500).json({ error: 'Failed to process AI command' });

@@ -1,5 +1,6 @@
 import { create } from 'zustand';
-import type { SpreadsheetState, CellValue, AICommand, AIResponse } from '@/types/spreadsheet';
+import type { SpreadsheetState, CellValue } from '@/types/spreadsheet';
+import type { AICommand, AIResponse } from '@/types/ai';
 import { parseAICommand, processAIResponse } from '@/lib/ai-utils';
 
 export const useSpreadsheetStore = create<SpreadsheetState>((set, get) => ({
