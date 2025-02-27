@@ -12,6 +12,11 @@ const SpreadsheetSchema = new mongoose.Schema({
     type: Map,
     of: CellSchema
   },
+  metadata: {
+    headers: [String],
+    rowCount: Number,
+    columnCount: Number
+  },
   createdAt: {
     type: Date,
     default: Date.now

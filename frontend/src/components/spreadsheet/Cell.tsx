@@ -49,13 +49,22 @@ export function Cell({ id, isHeader = false }: CellProps) {
     }
   }, [cell.formula]);
 
+  const isColumnHeader = id.match(/^[A-Z]1$/);
+  const isRowHeader = id.match(/^A[0-9]+$/);
+  
+  const cellClassName = `
+    p-2 border border-gray-200 outline-none min-w-[100px] h-[40px] text-gray-900
+    ${isColumnHeader ? 'bg-gray-100 font-bold text-center border-b-2 text-gray-900' : ''}
+    ${isRowHeader ? 'bg-gray-50 font-semibold text-center border-r-2 text-gray-900' : ''}
+    ${selectedCell === id ? 'ring-2 ring-blue-500' : ''}
+    ${isEditing ? 'bg-white' : 'hover:bg-gray-50'}
+  `.trim();
+
   return (
     <div
-      className={`relative w-full h-full min-h-[40px] border-b border-r border-gray-300 ${
-        selectedCell === id ? "bg-blue-50" : ""
-      } ${cell.isComputing ? "bg-gray-50" : ""}`}
-      onClick={() => !isHeader && setSelectedCell(id)}
+      className={cellClassName}
       onDoubleClick={handleDoubleClick}
+      onClick={() => setSelectedCell(id)}
     >
       {isEditing ? (
         <input
@@ -63,20 +72,12 @@ export function Cell({ id, isHeader = false }: CellProps) {
           value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}
           onBlur={handleBlur}
-          onKeyDown={(e) => {
-            if (e.key === 'Enter') {
-              handleBlur();
-            }
-          }}
-          className="absolute inset-0 w-full h-full p-2 border-2 border-blue-500 focus:outline-none text-black"
           autoFocus
+          className="w-full h-full outline-none p-1 text-gray-900"
         />
       ) : (
-        <div className="p-2 text-black">{cell.value}</div>
-      )}
-      {cell.isComputing && (
-        <div className="absolute inset-0 flex items-center justify-center bg-gray-50/50">
-          Processing...
+        <div className="w-full h-full overflow-hidden text-ellipsis text-gray-900">
+          {cell.value}
         </div>
       )}
     </div>

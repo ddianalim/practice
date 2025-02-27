@@ -9,6 +9,17 @@ const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY
 });
 
+const systemPrompt = `You are a spreadsheet AI assistant. Convert natural language into structured table data.
+Always respond with JSON in this format:
+{
+  "type": "table",
+  "headers": ["Company", "Industry", "CEO", "Size", "Location", "Revenue"],
+  "rows": [
+    ["Salesforce", "Technology", "Marc Benioff", "50000+", "San Francisco", "$21.25B"],
+    // ... more rows
+  ]
+}`;
+
 router.post('/process', async (req, res) => {
   try {
     const { prompt } = req.body;
@@ -18,21 +29,12 @@ router.post('/process', async (req, res) => {
       messages: [
         {
           role: "system",
-          content: `You are a spreadsheet AI assistant. Convert natural language into spreadsheet operations.
-          Always respond with JSON in this format:
-          {
-            "type": "fill",
-            "cells": {
-              "A1": "value",
-              "B1": "value"
-            }
-          }`
+          content: systemPrompt
         },
         {
           role: "user",
           content: `Given this request: "${prompt}"
-          Return a JSON response with cell values to create in the spreadsheet.
-          For example, if creating a budget, populate multiple cells with categories and headers.`
+          Return a JSON response with structured table data.`
         }
       ],
       response_format: { type: "json_object" }

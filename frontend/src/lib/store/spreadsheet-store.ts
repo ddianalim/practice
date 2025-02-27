@@ -2,6 +2,8 @@ import { create } from 'zustand';
 import type { SpreadsheetState, CellValue } from '@/types/spreadsheet';
 import type { AICommand, AIResponse } from '@/types/ai';
 import { parseAICommand, processAIResponse } from '@/lib/ai-utils';
+import { API_BASE_URL } from '@/lib/api-client';
+import { populateTableData } from '@/lib/spreadsheet-utils';
 
 export const useSpreadsheetStore = create<SpreadsheetState>((set, get) => ({
   cells: {},
@@ -23,21 +25,18 @@ export const useSpreadsheetStore = create<SpreadsheetState>((set, get) => ({
     try {
       set({ isProcessing: true });
       
-      // Parse the natural language command
-      const command = await parseAICommand(prompt);
-      
-      // Process the command and get response
-      const response = await processAIResponse(command);
-      
-      // Update cells with the response
-      Object.entries(response.cells).forEach(([cellId, value]) => {
-        get().setCell(cellId, {
-          value,
-          formula: null,
-          isComputing: false,
-          error: null,
-        });
+      const response = await fetch(`${API_BASE_URL}/ai/process`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ prompt })
       });
+
+      const data = await response.json();
+      
+      if (data.type === 'table') {
+        const cells = populateTableData(data.headers, data.rows);
+        set((state) => ({ cells }));
+      }
     } catch (error) {
       console.error('Error processing AI command:', error);
     } finally {
