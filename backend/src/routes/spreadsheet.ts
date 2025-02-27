@@ -13,4 +13,13 @@ router.post('/save', async (req, res) => {
   }
 });
 
+router.get('/list', async (req, res) => {
+  try {
+    const spreadsheets = await Spreadsheet.find().sort({ createdAt: -1 });
+    res.json(spreadsheets);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to fetch spreadsheets' });
+  }
+});
+
 export default router; 
