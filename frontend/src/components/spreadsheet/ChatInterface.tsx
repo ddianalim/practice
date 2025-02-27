@@ -5,14 +5,18 @@ import { useSpreadsheetStore } from "@/lib/store/spreadsheet-store";
 
 export function ChatInterface() {
   const [prompt, setPrompt] = useState("");
-  const [isProcessing, setIsProcessing] = useState(false);
+  const { processAICommand, isProcessing } = useSpreadsheetStore();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsProcessing(true);
-    console.log("Processing prompt:", prompt);
-    setPrompt("");
-    setIsProcessing(false);
+    if (!prompt.trim()) return;
+
+    try {
+      await processAICommand(prompt);
+      setPrompt("");
+    } catch (error) {
+      console.error("Error:", error);
+    }
   };
 
   return (
@@ -25,6 +29,7 @@ export function ChatInterface() {
             onChange={(e) => setPrompt(e.target.value)}
             placeholder="Enter instructions (e.g., 'Create a monthly budget template')"
             className="flex-1 px-4 py-3 text-base text-gray-900 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            disabled={isProcessing}
           />
           <button
             type="submit"
