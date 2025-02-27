@@ -4,19 +4,20 @@ import { useState, useEffect } from 'react';
 import { API_BASE_URL } from '@/lib/api-client';
 import { useSpreadsheetStore } from '@/lib/store/spreadsheet-store';
 
-export function SavedSpreadsheets() {
+export function SavedSpreadsheets({ onRefresh }: { onRefresh?: () => void }) {
   const [spreadsheets, setSpreadsheets] = useState([]);
   const { cells, setCell } = useSpreadsheetStore();
-
-  useEffect(() => {
-    fetchSpreadsheets();
-  }, []);
 
   const fetchSpreadsheets = async () => {
     const response = await fetch(`${API_BASE_URL}/spreadsheet/list`);
     const data = await response.json();
     setSpreadsheets(data);
+    if (onRefresh) onRefresh();
   };
+
+  useEffect(() => {
+    fetchSpreadsheets();
+  }, []);
 
   const loadSpreadsheet = (cells) => {
     Object.entries(cells).forEach(([id, value]) => {
@@ -34,7 +35,7 @@ export function SavedSpreadsheets() {
             onClick={() => loadSpreadsheet(sheet.cells)}
             className="px-4 py-2 bg-white border border-gray-300 rounded-md hover:bg-gray-50 text-gray-900"
           >
-            {new Date(sheet.createdAt).toLocaleDateString()}
+            {sheet.title || 'Untitled Spreadsheet'}
           </button>
         ))}
       </div>

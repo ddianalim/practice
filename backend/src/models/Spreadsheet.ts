@@ -8,6 +8,11 @@ const CellSchema = new mongoose.Schema({
 });
 
 const SpreadsheetSchema = new mongoose.Schema({
+  title: {
+    type: String,
+    required: true,
+    default: 'Untitled Spreadsheet'
+  },
   cells: {
     type: Map,
     of: CellSchema

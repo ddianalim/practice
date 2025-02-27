@@ -44,7 +44,7 @@ export const useSpreadsheetStore = create<SpreadsheetState>((set, get) => ({
     }
   },
 
-  saveSpreadsheet: async () => {
+  saveSpreadsheet: async (title: string) => {
     try {
       const cells = get().cells;
       const response = await fetch(`${API_BASE_URL}/spreadsheet/save`, {
@@ -52,7 +52,7 @@ export const useSpreadsheetStore = create<SpreadsheetState>((set, get) => ({
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ cells }),
+        body: JSON.stringify({ cells, title }),
       });
       
       if (!response.ok) {

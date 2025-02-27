@@ -5,8 +5,11 @@ const router = express.Router();
 
 router.post('/save', async (req, res) => {
   try {
-    const { cells } = req.body;
-    const spreadsheet = await Spreadsheet.create({ cells });
+    const { cells, title } = req.body;
+    const spreadsheet = await Spreadsheet.create({ 
+      cells,
+      title: title || 'Untitled Spreadsheet'
+    });
     res.json(spreadsheet);
   } catch (error) {
     res.status(500).json({ error: 'Failed to save spreadsheet' });
