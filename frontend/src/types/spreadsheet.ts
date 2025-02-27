@@ -11,11 +11,15 @@ export type CellValue = {
   error: string | null;
 };
 
-export interface SpreadsheetStore {
+export interface SpreadsheetState {
   cells: Record<string, CellValue>;
   selectedCell: string | null;
+  isProcessing: boolean;
+  currentSpreadsheetId: string | null;
+  clearCells: () => void;
   setCell: (id: string, value: Partial<CellValue>) => void;
   setSelectedCell: (id: string | null) => void;
+  setCurrentSpreadsheetId: (id: string | null) => void;
   processAICommand: (prompt: string) => Promise<void>;
-  isProcessing: boolean;
+  saveSpreadsheet: (title: string) => Promise<any>;
 }

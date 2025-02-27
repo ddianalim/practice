@@ -1,12 +1,30 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useSpreadsheetStore } from '@/lib/store/spreadsheet-store';
 
 export function Navbar({ onSave }: { onSave?: () => void }) {
-  const [title, setTitle] = useState('Untitled Spreadsheet');
+  const [title, setTitle] = useState<string | null>(null);
+  const [mounted, setMounted] = useState(false);
   
+  useEffect(() => {
+    setMounted(true);
+    setTitle('Untitled Spreadsheet');
+  }, []);
+
+  useEffect(() => {
+    const handleTitleUpdate = (event: CustomEvent) => {
+      setTitle(event.detail);
+    };
+
+    window.addEventListener('updateSpreadsheetTitle', handleTitleUpdate as EventListener);
+    return () => {
+      window.removeEventListener('updateSpreadsheetTitle', handleTitleUpdate as EventListener);
+    };
+  }, []);
+
   const handleSave = async () => {
+    if (!title) return;
     try {
       await useSpreadsheetStore.getState().saveSpreadsheet(title);
       if (onSave) onSave();
@@ -16,11 +34,13 @@ export function Navbar({ onSave }: { onSave?: () => void }) {
     }
   };
   
+  if (!mounted) return null;
+
   return (
     <div className="flex items-center justify-between p-4 border border-gray-200 rounded-lg bg-white">
       <input
         type="text"
-        value={title}
+        value={title || ''}
         onChange={(e) => setTitle(e.target.value)}
         className="text-xl font-semibold px-2 py-1 border border-transparent hover:border-gray-300 rounded focus:outline-none focus:border-blue-500 text-gray-900"
         placeholder="Untitled Spreadsheet"

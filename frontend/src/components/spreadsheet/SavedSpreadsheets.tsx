@@ -6,7 +6,7 @@ import { useSpreadsheetStore } from '@/lib/store/spreadsheet-store';
 
 export function SavedSpreadsheets({ onRefresh }: { onRefresh?: () => void }) {
   const [spreadsheets, setSpreadsheets] = useState([]);
-  const { cells, setCell } = useSpreadsheetStore();
+  const { cells, setCell, clearCells } = useSpreadsheetStore();
 
   const fetchSpreadsheets = async () => {
     const response = await fetch(`${API_BASE_URL}/spreadsheet/list`);
@@ -19,10 +19,13 @@ export function SavedSpreadsheets({ onRefresh }: { onRefresh?: () => void }) {
     fetchSpreadsheets();
   }, []);
 
-  const loadSpreadsheet = (cells) => {
-    Object.entries(cells).forEach(([id, value]) => {
+  const loadSpreadsheet = (sheet) => {
+    clearCells();
+    Object.entries(sheet.cells).forEach(([id, value]) => {
       setCell(id, value);
     });
+    useSpreadsheetStore.getState().setCurrentSpreadsheetId(sheet._id);
+    window.dispatchEvent(new CustomEvent('updateSpreadsheetTitle', { detail: sheet.title }));
   };
 
   return (
@@ -32,7 +35,7 @@ export function SavedSpreadsheets({ onRefresh }: { onRefresh?: () => void }) {
         {spreadsheets.map((sheet) => (
           <button
             key={sheet._id}
-            onClick={() => loadSpreadsheet(sheet.cells)}
+            onClick={() => loadSpreadsheet(sheet)}
             className="px-4 py-2 bg-white border border-gray-300 rounded-md hover:bg-gray-50 text-gray-900"
           >
             {sheet.title || 'Untitled Spreadsheet'}

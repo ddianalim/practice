@@ -9,6 +9,9 @@ export const useSpreadsheetStore = create<SpreadsheetState>((set, get) => ({
   cells: {},
   selectedCell: null,
   isProcessing: false,
+  currentSpreadsheetId: null,
+
+  clearCells: () => set({ cells: {}, currentSpreadsheetId: null }),
 
   setCell: (id: string, value: Partial<CellValue>) =>
     set((state) => ({
@@ -20,6 +23,8 @@ export const useSpreadsheetStore = create<SpreadsheetState>((set, get) => ({
 
   setSelectedCell: (id: string | null) =>
     set({ selectedCell: id }),
+
+  setCurrentSpreadsheetId: (id: string | null) => set({ currentSpreadsheetId: id }),
 
   processAICommand: async (prompt: string) => {
     try {
@@ -47,14 +52,20 @@ export const useSpreadsheetStore = create<SpreadsheetState>((set, get) => ({
   saveSpreadsheet: async (title: string) => {
     try {
       const cells = get().cells;
-      const response = await fetch(`${API_BASE_URL}/spreadsheet/save`, {
-        method: 'POST',
+      const currentId = get().currentSpreadsheetId;
+      const method = currentId ? 'PUT' : 'POST';
+      const url = currentId 
+        ? `${API_BASE_URL}/spreadsheet/update/${currentId}`
+        : `${API_BASE_URL}/spreadsheet/save`;
+
+      const response = await fetch(url, {
+        method,
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ cells, title }),
       });
-      
+
       if (!response.ok) {
         throw new Error('Failed to save spreadsheet');
       }
