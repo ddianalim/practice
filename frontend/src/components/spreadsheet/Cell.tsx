@@ -44,7 +44,7 @@ export function Cell({ id, isHeader = false }: CellProps) {
 
   return (
     <div
-      className={`relative w-full h-full min-h-[40px] ${
+      className={`relative w-full h-full min-h-[40px] border-b border-r border-gray-300 ${
         selectedCell === id ? "bg-blue-50" : ""
       }`}
       onClick={() => !isHeader && setSelectedCell(id)}
@@ -56,7 +56,12 @@ export function Cell({ id, isHeader = false }: CellProps) {
           value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}
           onBlur={handleBlur}
-          className="absolute inset-0 w-full h-full p-2 border-2 border-blue-500"
+          onKeyDown={(e) => {
+            if (e.key === 'Enter') {
+              handleBlur();
+            }
+          }}
+          className="absolute inset-0 w-full h-full p-2 border-2 border-blue-500 focus:outline-none"
           autoFocus
         />
       ) : (

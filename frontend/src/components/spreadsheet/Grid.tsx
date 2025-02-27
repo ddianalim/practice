@@ -17,7 +17,7 @@ export function Grid() {
   console.log('Store state:', store);
 
   return (
-    <div className="overflow-auto border border-gray-200 rounded-lg bg-white">
+    <div className="overflow-auto border border-gray-800 rounded-lg bg-white">
       <div
         className="grid"
         style={{
@@ -25,11 +25,11 @@ export function Grid() {
         }}
       >
         {/* Header row */}
-        <div className="bg-gray-50 p-2 border-b border-r border-gray-200" />
+        <div className="bg-gray-200 p-2 border-b border-r border-gray-300" />
         {Array.from({ length: COLS }).map((_, i) => (
           <div
             key={`header-${i}`}
-            className="bg-gray-50 p-2 border-b border-r border-gray-200 text-center font-medium"
+            className="bg-gray-200 p-2 border-b border-r border-gray-300 text-center font-medium"
           >
             {getColumnLabel(i)}
           </div>
@@ -38,7 +38,7 @@ export function Grid() {
         {/* Grid cells */}
         {Array.from({ length: ROWS }).map((_, row) => (
           <React.Fragment key={row}>
-            <div className="bg-gray-50 p-2 border-b border-r border-gray-200 text-center font-medium">
+            <div className="bg-gray-200 p-2 border-b border-r border-gray-300 text-center font-medium">
               {row + 1}
             </div>
             {Array.from({ length: COLS }).map((_, col) => (
