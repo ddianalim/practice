@@ -13,7 +13,7 @@ export function Grid() {
   console.log('Store state:', store);
 
   return (
-    <div className="overflow-auto border border-gray-200 rounded-lg shadow-sm">
+    <div className="overflow-auto border-b border-x border-gray-200 rounded-b-lg shadow-sm">
       <div className="grid" style={{ 
         gridTemplateColumns: `40px repeat(${columns.length}, minmax(100px, 1fr))`,
       }}>

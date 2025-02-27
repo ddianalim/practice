@@ -51,4 +51,19 @@ router.put('/update/:id', async (req: Request, res: Response): Promise<void> => 
   }
 });
 
+// Delete existing spreadsheet
+router.delete('/delete/:id', async (req: Request, res: Response): Promise<void> => {
+  try {
+    const spreadsheet = await Spreadsheet.findByIdAndDelete(req.params.id);
+    
+    if (!spreadsheet) {
+      res.status(404).json({ error: 'Spreadsheet not found' });
+      return;
+    }
+    res.json({ message: 'Spreadsheet deleted successfully' });
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to delete spreadsheet' });
+  }
+});
+
 export default router; 

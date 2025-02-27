@@ -22,4 +22,5 @@ export interface SpreadsheetState {
   setCurrentSpreadsheetId: (id: string | null) => void;
   processAICommand: (prompt: string) => Promise<void>;
   saveSpreadsheet: (title: string) => Promise<any>;
+  deleteSpreadsheet: (id: string) => Promise<void>;
 }

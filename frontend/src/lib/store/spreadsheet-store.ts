@@ -75,5 +75,22 @@ export const useSpreadsheetStore = create<SpreadsheetState>((set, get) => ({
       console.error('Save error:', error);
       throw error;
     }
+  },
+
+  deleteSpreadsheet: async (id: string) => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/spreadsheet/delete/${id}`, {
+        method: 'DELETE',
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to delete spreadsheet');
+      }
+      
+      set({ currentSpreadsheetId: null });
+    } catch (error) {
+      console.error('Delete error:', error);
+      throw error;
+    }
   }
 })); 
