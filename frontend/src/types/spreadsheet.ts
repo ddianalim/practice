@@ -11,7 +11,9 @@ export type CellValue = {
   error: string | null;
 };
 
-export type SpreadsheetState = {
+export interface SpreadsheetStore {
   cells: Record<string, CellValue>;
   selectedCell: string | null;
-}; 
+  setCell: (id: string, value: Partial<CellValue>) => void;
+  setSelectedCell: (id: string | null) => void;
+}
